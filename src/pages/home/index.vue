@@ -50,6 +50,9 @@
 </template>
 
 <script>
+
+import request from '@/utils/request.js'
+
 export default {
   data () {
     return {
@@ -74,22 +77,16 @@ export default {
   },
   methods: {
     getMovieList (item) {
-      wx.request({
-        url: `https://api.douban.com/v2/movie/${item.param}?apikey=0df993c66c0c636e29ecbb5344252a4a`, // 开发者服务器接口地址",
-        method: 'GET',
-        header: {
-          'Content-Type': 'application/x-www-form-urlencoded' // 默认值
-        },
-        dataType: 'json', // 如果设为json，会尝试对返回的数据做一次 JSON.parse
-        success: res => {
-          // console.log(res.data.subjects)
-          let movieList = res.data.subjects
-          movieList.forEach(v => {
-            v.starNum = Math.ceil(v.rating.average / 2)
-          })
+      request({
+        url: `https://api.douban.com/v2/movie/${item.param}?apikey=0df993c66c0c636e29ecbb5344252a4a` // 开发者服务器接口地址",
+      }).then(res => {
+        // console.log(res.data.subjects)
+        let movieList = res.data.subjects
+        movieList.forEach(v => {
+          v.starNum = Math.ceil(v.rating.average / 2)
+        })
 
-          item.list = movieList
-        }
+        item.list = movieList
       })
     }
   }
